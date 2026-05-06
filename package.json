@@ -1,0 +1,12 @@
+{
+  "name": "telegram-bot-cron",
+  "version": "1.0.0",
+  "main": "sendPrice.js",
+  "type": "module",
+  "scripts": {
+    "start": "node sendPrice.js"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
