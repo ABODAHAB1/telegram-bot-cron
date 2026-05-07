@@ -1,30 +1,29 @@
-import fetch from "node-fetch";
+const fetch = require("node-fetch");
 
-const botToken = process.env.BOT_TOKEN;
+const token = process.env.BOT_TOKEN;
 const chatId = process.env.CHAT_ID;
+const COIN_ID = "the-open-network";
+const COINGECKO_URL = `https://api.coingecko.com/api/v3/simple/price?ids=${COIN_ID}&vs_currencies=usd`;
 
 async function sendPrice() {
-  try {
-    const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=toncoin&vs_currencies=usd,egp");
-    const data = await res.json();
-    const usd = data.toncoin.usd;
-    const egp = data.toncoin.egp;
+  const res = await fetch(COINGECKO_URL);
+  const data = await res.json();
+  console.log("CoinGecko data:", data); // علشان نشوف شكل البيانات
 
-    const message = `سعر التون الحالي:\n💵 USD: ${usd}\n🇪🇬 EGP: ${egp}`;
-
-    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: message
-      })
-    });
-
-    console.log("Message sent:", message);
-  } catch (err) {
-    console.error("Error:", err);
+  const tonUSD = data[COIN_ID]?.usd ?? null;
+  if (!tonUSD) {
+    console.error("مفيش سعر راجع من API");
+    return;
   }
+
+  const messageText = `سعر التون الحالي: ${tonUSD} $`;
+  const url = `https://api.telegram.org/bot${token}/sendMessage`;
+
+  await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ chat_id: chatId, text: messageText }),
+  });
 }
 
 sendPrice();
