@@ -2,7 +2,9 @@ const fetch = require("node-fetch");
 
 const token = process.env.BOT_TOKEN;
 const chatId = process.env.CHAT_ID;
-const COIN_ID = "toncoin"; // جربنا بالـ ID ده
+
+// جربنا بالـ ID "toncoin" لكن لو مش شغال هنشوف في الـ Logs المفتاح الصح
+const COIN_ID = "toncoin"; 
 const COINGECKO_URL = `https://api.coingecko.com/api/v3/simple/price?ids=${COIN_ID}&vs_currencies=usd`;
 
 async function sendPrice() {
@@ -10,12 +12,12 @@ async function sendPrice() {
         const res = await fetch(COINGECKO_URL);
         const data = await res.json();
 
-        // اطبع البيانات كاملة علشان نعرف شكلها
-        console.log("CoinGecko data:", data);
+        // اطبع البيانات كاملة علشان نعرف شكلها بالظبط
+        console.log("CoinGecko data:", JSON.stringify(data, null, 2));
 
         const tonUSD = data[COIN_ID]?.usd ?? null;
         if (!tonUSD) {
-            console.error("مش لاقي سعر من API");
+            console.error("⚠️ مش لاقي سعر من API - المفتاح غلط أو مختلف");
             return;
         }
 
@@ -28,9 +30,9 @@ async function sendPrice() {
             body: JSON.stringify({ chat_id: chatId, text: messageText }),
         });
 
-        console.log("تم إرسال الرسالة بنجاح");
+        console.log("✅ تم إرسال الرسالة بنجاح");
     } catch (err) {
-        console.error("حصل خطأ:", err);
+        console.error("❌ حصل خطأ:", err);
     }
 }
 
