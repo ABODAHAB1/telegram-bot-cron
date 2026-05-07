@@ -1,8 +1,8 @@
-const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
 const token = process.env.BOT_TOKEN;
 const chatId = process.env.CHAT_ID;
-const COIN_ID = "toncoin"; // مؤقتًا، هنشوف في الـ Logs المفتاح الصح
+const COIN_ID = "toncoin"; // هنغيره لو المفتاح مختلف
 const COINGECKO_URL = `https://api.coingecko.com/api/v3/simple/price?ids=${COIN_ID}&vs_currencies=usd`;
 
 async function sendPrice() {
@@ -10,7 +10,6 @@ async function sendPrice() {
         const res = await fetch(COINGECKO_URL);
         const data = await res.json();
 
-        // اطبع البيانات كاملة علشان نعرف شكلها
         console.log("CoinGecko data:", JSON.stringify(data, null, 2));
 
         const tonUSD = data[COIN_ID]?.usd ?? null;
