@@ -2,13 +2,15 @@ const fetch = require("node-fetch");
 
 const token = process.env.BOT_TOKEN;
 const chatId = process.env.CHAT_ID;
-const COIN_ID = "toncoin"; // التعديل هنا
+const COIN_ID = "toncoin"; // جربنا بالـ ID ده
 const COINGECKO_URL = `https://api.coingecko.com/api/v3/simple/price?ids=${COIN_ID}&vs_currencies=usd`;
 
 async function sendPrice() {
     try {
         const res = await fetch(COINGECKO_URL);
         const data = await res.json();
+
+        // اطبع البيانات كاملة علشان نعرف شكلها
         console.log("CoinGecko data:", data);
 
         const tonUSD = data[COIN_ID]?.usd ?? null;
@@ -33,4 +35,3 @@ async function sendPrice() {
 }
 
 sendPrice();
-
